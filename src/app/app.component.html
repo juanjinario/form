@@ -1,4 +1,4 @@
-<mat-toolbar color="primary">
+<mat-toolbar class="header" color="primary">
   <mat-toolbar-row>
     <a class="logo" routerLink="/">
       <mat-icon>copyright</mat-icon>
@@ -7,8 +7,8 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<mat-drawer-container class="example-container">
-  <mat-drawer mode="side" opened>
+<mat-drawer-container>
+  <mat-drawer class="sidenav" mode="side" opened>
     <a routerLink="/users"  routerLinkActive="active">Usuarios</a>
   </mat-drawer>
   <mat-drawer-content>

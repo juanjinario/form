@@ -17,7 +17,7 @@ export class UsersComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  buildForm() {
+  buildForm(): void {
     this.userForm = this.formBuilder.group({
       fullName: ['', Validators.required],
       userName: ['', Validators.required],
@@ -25,8 +25,26 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  save() {
-    alert('enviado');
+  resetFrom() {
+    this.userForm.reset({
+      fullName: '',
+      userName: '',
+      email: ''
+    });
+  }
+
+  save(): void {
+    alert(this.getEditedUser().fullName + ' ' + this.getEditedUser().userName + ' ' + this.getEditedUser().email);
+    this.resetFrom();
+  }
+
+  private getEditedUser() {
+    const formModel = this.userForm.value;
+    return {
+      fullName: formModel.fullName,
+      userName: formModel.userName,
+      email: formModel.email,
+    };
   }
 
 }
