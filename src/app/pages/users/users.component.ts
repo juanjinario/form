@@ -18,7 +18,15 @@ export class UsersComponent implements OnInit {
   }
 
   buildForm() {
+    this.userForm = this.formBuilder.group({
+      fullName: ['', Validators.required],
+      userName: ['', Validators.required],
+      email: ['', Validators.email],
+    });
+  }
 
+  save() {
+    alert('enviado');
   }
 
 }

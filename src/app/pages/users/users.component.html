@@ -1,119 +1,20 @@
-<!-- <form #form="ngForm" [formGroup]="userForm" novalidate (ngSubmit)="save()">
-  <p class="title">
-      <i class="fas fa-user color-primary" style="padding-right: 5px;"></i> {{ passenger.name }} {{ passenger.surname }}
-  </p>
-  <div class="form-row" *ngIf="passenger.allowedNationalId">
-      <label i18n="@@checkin_form_iddocument">Documento de identificación</label>
-      <div class="ddl-wrapper">
-          <select formControlName="idType" class="form-input" (change)="onChangeIdType($event.target.value)">
-              <option *ngFor="let option of ID_TYPES" [value]="option.value">{{ option.label }}</option>
-          </select>
-          <div class="caret-container">
-              <i class="fas fa-caret-down"></i>
-          </div>
-      </div>
+<form class="main-container" [formGroup]="userForm" (ngSubmit)="save()">
+  <h3>
+    <i class="fas fa-user color-primary" style="padding-right: 5px;"></i> Crear Usuario
+  </h3>
+  <div class="form-row">
+    <label>Nombre completo</label>
+    <input formControlName="fullName" type="text">
   </div>
   <div class="form-row">
-      <label *ngIf="passenger.idType == 'id'; then dninumber else passnumber"></label>
-      <ng-template #dninumber i18n="@@checkin_form_dninumber">Número del documento nacional de identidad</ng-template>
-      <ng-template #passnumber i18n="@@checkin_form_passnumber">Número del pasaporte</ng-template>
-      <input type="text" formControlName="id" class="form-input" [class.is-invalid]="id.invalid && id.touched">
-      <mat-error *ngIf="id.invalid && id.touched" i18n="@@checkin_form_required">
-          Este campo es obligatorio
-      </mat-error>
+    <label>Usuario</label>
+    <input formControlName="userName" type="text">
   </div>
-  <div class="form-row" *ngIf="isCountryNeed">
-      <label *ngIf="passenger.idType == 'id'; then dniemision else passemision"></label>
-      <ng-template #dniemision i18n="@@checkin_form_dniemision">País de emisión del documento nacional de identidad</ng-template>
-      <ng-template #passemision i18n="@@checkin_form_passemision">País de emisión del pasaporte</ng-template>
-      <div class="ddl-wrapper">
-          <div class="flag-container">
-              <img src="https://airhopping.blob.core.windows.net/static/img/flags/100px/{{ idCountry.value }}.png">
-          </div>
-          <select formControlName="idCountry"
-                  class="form-input" autocomplete="country">
-              <option *ngFor="let option of NATIONALITIES" [value]="option.value">{{ option.label }}</option>
-          </select>
-          <div class="caret-container">
-              <i class="fas fa-caret-down"></i>
-          </div>
-      </div>
+  <div class="form-row">
+    <label>Email</label>
+    <input formControlName="email" type="email">
   </div>
-  <div class="form-row" *ngIf="isExpireDateNeed">
-      <label *ngIf="passenger.idType == 'id'; then dniexpire else passexpire"></label>
-      <ng-template #dniexpire i18n="@@checkin_form_dniexpire">Fecha de expiración del documento de identidad</ng-template>
-      <ng-template #passexpire i18n="@@checkin_form_passexpire">Fecha de expiración del pasaporte</ng-template>
-      <div class="input-group" [class.is-invalid]="expireDateError">
-          <div class="input-wrapper day-wrapper">
-              <input formControlName="idExpirationDay" class="form-input birth-input"
-                     type="tel" placeholder="DD" min="1" max="31" maxlength="2">
-          </div>
-          <div class="input-wrapper month-wrapper">
-              <input formControlName="idExpirationMonth" class="form-input birth-input"
-                     type="tel" placeholder="MM" min="1" max="12" maxlength="2">
-          </div>
-          <div class="input-wrapper year-wrapper">
-              <input formControlName="idExpirationYear" class="form-input birth-input"
-                     type="tel" placeholder="AAAA" min="1900" max="2099" maxlength="4">
-          </div>
-      </div>
-      <mat-error *ngIf="expireDateError" i18n="@@checkin_form_requiredformatdate">
-          Este campo es obligatorio y el formato de la fecha es DD MM YYYY.
-      </mat-error>
-      <mat-error *ngIf="userForm.get('idExpirationYear').touched && !expireDateError && expireBeforelastFlight" i18n="@@checkin_form_errorexpire">
-        El documento debe expirar después del último vuelo ({{ lastFlight.departure_datetime |date:"dd-MM-yyyy" }})
-      </mat-error>
+  <div class="form-row">
+    <button type="submit" [disabled]="userForm.invalid">Enviar</button>
   </div>
-  <div class="form-row" *ngIf="isIssueDateNeed">
-      <label *ngIf="passenger.idType == 'id'; then dnidate else passdate"></label>
-      <ng-template #dnidate i18n="@@checkin_form_dnidate">Fecha de emisión del documento de identidad</ng-template>
-      <ng-template #passdate i18n="@@checkin_form_passdate">Fecha de emisión del pasaporte</ng-template>
-      <div class="input-group" [class.is-invalid]="issueDateError">
-          <div class="input-wrapper day-wrapper">
-              <input formControlName="idIssueDay" class="form-input birth-input"
-                     type="tel" placeholder="DD" min="1" max="31" maxlength="2">
-          </div>
-          <div class="input-wrapper month-wrapper">
-              <input formControlName="idIssueMonth" class="form-input birth-input"
-                     type="tel" placeholder="MM" min="1" max="12" maxlength="2">
-          </div>
-          <div class="input-wrapper year-wrapper">
-              <input formControlName="idIssueYear" class="form-input birth-input"
-                     type="tel" placeholder="AAAA" min="1900" max="2099" maxlength="4">
-          </div>
-      </div>
-      <mat-error *ngIf="issueDateError" i18n="@@checkin_form_requiredformatdate">
-          Este campo es obligatorio y el formato de la fecha es DD MM YYYY
-      </mat-error>
-  </div>
-  <div class="form-row" *ngIf="requirements['resident_country']">
-      <label i18n="@@checkin_form_residence">País de residencia</label>
-      <div class="ddl-wrapper">
-          <div class="flag-container">
-              <img src="https://airhopping.blob.core.windows.net/static/img/flags/100px/{{ residentCountry.value }}.png">
-          </div>
-          <select formControlName="residentCountry"
-                  class="form-input">
-              <option *ngFor="let option of NATIONALITIES" [value]="option.value">{{ option.label }}</option>
-          </select>
-          <div class="caret-container">
-              <i class="fas fa-caret-down"></i>
-          </div>
-      </div>
-  </div>
-  <div class="form-row" *ngIf="requirements['arrival_address']">
-      <label i18n="@@checkin_form_arrivaladdress">Dirección de llegada</label>
-      <input type="text" formControlName="arrivalAddress" class="form-input" [class.is-invalid]="arrivalAddress.invalid && arrivalAddress.touched">
-      <mat-error *ngIf="arrivalAddress.invalid && arrivalAddress.touched" i18n="@@checkin_form_required">
-          Este campo es obligatorio
-      </mat-error>
-  </div>
-  <div class="form-row" *ngIf="requirements['arrival_zip']">
-      <label i18n="@@checkin_form_arrivalpostal">Código postal de llegada</label>
-      <input type="text" formControlName="arrivalZip" class="form-input" [class.is-invalid]="arrivalZip.invalid && arrivalZip.touched">
-      <mat-error *ngIf="arrivalZip.invalid && arrivalZip.touched" i18n="@@checkin_form_required">
-          Este campo es obligatorio
-      </mat-error>
-  </div>
-</form> -->
-Webo
+</form>

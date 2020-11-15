@@ -1,0 +1,12 @@
+.main-container {
+  margin: 20px 40px;
+  .form-row {
+    display: flex;
+    & + .form-row {
+      margin-top: 1em;
+    }
+    label {
+      margin-right: 10px;
+    }
+  }
+}
